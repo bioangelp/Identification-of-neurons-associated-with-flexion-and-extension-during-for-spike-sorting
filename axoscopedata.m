@@ -1,5 +1,7 @@
 sr = 50000;
 clc
+
+%% Obteniendo datos para el nombre
 disp(" Copie su segmento y posteriormente presione ENTER (no CTRL + V): ");
 pause;
 registroRaw = clipboard("paste");
@@ -54,8 +56,8 @@ subCarpetaNoNeedIndividual = fullfile(subCarpetaNoNeed, nombreArchivo);
 if ~exist(subCarpetaNoNeedIndividual, 'dir')
     mkdir(subCarpetaNoNeedIndividual);
 end
-
-%guaardar pre waveclus en raw
+%%
+% guaardar pre waveclus en raw
 
 save (nombreArchivo, 'data', 'sr');
 moverArchNombre = sprintf("%s.mat", nombreArchivo);
@@ -126,7 +128,7 @@ end
 % Definiendo la unicacion actual del programa con el fin de crear una
 % carpeta llamada neuronas donde se van a guardar los archivos .mat de cada
 % neurona extraida por registro
-[localizacionDePrograma, ~, ~] = fileparts(mfilename('fullpath'));
+
 subCarpetaNeurona = fullfile(localizacionDePrograma, "neuronas");
 if ~exist(subCarpetaNeurona, 'dir')
     mkdir(subCarpetaNeurona);
