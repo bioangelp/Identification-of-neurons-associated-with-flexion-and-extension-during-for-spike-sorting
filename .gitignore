@@ -1,0 +1,9 @@
+data_/
+experimentos/
+fig/
+neuronas/
+raw/
+resultados_agrupados/
+times_/
+*.mat
+*.png

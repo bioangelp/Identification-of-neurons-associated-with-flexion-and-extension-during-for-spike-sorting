@@ -1,0 +1,4 @@
+1. Descarga el archivo `practica1`, que incluye Axoscope, Waveclus y los experimentos (`assets/practica1-preview.png`).
+2. Abre MATLAB y añade todas las carpetas al camino actual (`assets/matlab-path.png`).
+3. Accede a [https://github.com/fcollman/abfload](https://github.com/fcollman/abfload), haz clic en el botón verde que dice _code_, descarga el archivo en ZIP y descomprímelo en la carpeta donde está el resto de tu proyecto de MATLAB. No es necesario añadirlo al path, ya que MATLAB reconoce automáticamente todos los archivos que tengas allí (`assets/github-abfload.png`).
+4. Abre Axoscope dentro de la carpeta de pCLAMP 
