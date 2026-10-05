@@ -1,10 +1,16 @@
 function [neuronasOrdenadas, neuronasSimples] = organizarNeuronas(estructuraNeuronas)
-    datosAgrupados = struct();  
+    datosAgrupados = struct(); 
+    porcentajeDeFlexion = struct();
+    iteracionParaMedia = struct();
     for k = 1:length(estructuraNeuronas)
         %disp(length(estructuraNeuronas))
         nombreActual = estructuraNeuronas(k).nombre;
         tiemposDeActualidad = estructuraNeuronas(k).disparos;
+        
+        
         % disp(nombreActual)
+        % disp(porcentajeDeFlexion)
+
         % buscar donde esta la iteracion
         posicionDelRegistroDondeSeMarcaLaIteracion = strfind(nombreActual, 'i');
 
@@ -19,12 +25,16 @@ function [neuronasOrdenadas, neuronasSimples] = organizarNeuronas(estructuraNeur
         % cONFIRMA QUE LA NEURONA YA EXISTE 
         if isfield(datosAgrupados, nombreDeLaNeuronaRecortadoSinLaIteracion)
             datosAgrupados.(nombreDeLaNeuronaRecortadoSinLaIteracion) = [datosAgrupados.(nombreDeLaNeuronaRecortadoSinLaIteracion); tiemposDeActualidad];
+            porcentajeDeFlexion.(nombreDeLaNeuronaRecortadoSinLaIteracion) = porcentajeDeFlexion.(nombreDeLaNeuronaRecortadoSinLaIteracion) + estructuraNeuronas(k).flexion;
+            iteracionParaMedia.(nombreDeLaNeuronaRecortadoSinLaIteracion) = iteracionParaMedia.(nombreDeLaNeuronaRecortadoSinLaIteracion) + 1;
         else
             datosAgrupados.(nombreDeLaNeuronaRecortadoSinLaIteracion) = tiemposDeActualidad;
+            porcentajeDeFlexion.(nombreDeLaNeuronaRecortadoSinLaIteracion) = estructuraNeuronas(k).flexion;
+            iteracionParaMedia.(nombreDeLaNeuronaRecortadoSinLaIteracion) = 1;
         end
         %disp(datosAgrupados)
     end 
-
+    %disp(porcentajeDeFlexion)
     listaDeNombresDeLaNeuronaRecortadoSinLaIteracion = fieldnames(datosAgrupados);
     neuronasOrdenadas = struct();
     neuronasSimples = struct();
@@ -34,12 +44,15 @@ function [neuronasOrdenadas, neuronasSimples] = organizarNeuronas(estructuraNeur
     for k = 1:length(listaDeNombresDeLaNeuronaRecortadoSinLaIteracion)
         nombreDeLaNeuronaEnEsteCiclo = listaDeNombresDeLaNeuronaRecortadoSinLaIteracion{k};
         tiemposTotales = datosAgrupados.(nombreDeLaNeuronaEnEsteCiclo);
-        %simples
+        flexPorciento = porcentajeDeFlexion.(nombreDeLaNeuronaEnEsteCiclo) / iteracionParaMedia.(nombreDeLaNeuronaEnEsteCiclo);
+        %ordenadas
         neuronasOrdenadas(k).nombre = nombreDeLaNeuronaEnEsteCiclo;
         neuronasOrdenadas(k).disparos = sort(tiemposTotales);
-        %ordenados
+        neuronasOrdenadas(k).flexporcent = flexPorciento;
+        %simples
         neuronasSimples(k).nombre = nombreDeLaNeuronaEnEsteCiclo;
         neuronasSimples(k).disparos = tiemposTotales;
+        neuronasSimples(k).flexporcent = flexPorciento;
     end
     % guardar 
     
@@ -62,5 +75,5 @@ function [neuronasOrdenadas, neuronasSimples] = organizarNeuronas(estructuraNeur
     save(rutaSimples, 'neuronasSimples');
     cd(localizacionDePrograma)
     %}
-    
+
 end

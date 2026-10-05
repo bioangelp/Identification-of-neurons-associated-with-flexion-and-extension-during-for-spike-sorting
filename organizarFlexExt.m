@@ -17,8 +17,7 @@ function structClasificado = organizarFlexExt(neuronasOrdenadas)
         % Si la neurona no tiene datos
           if total == 0
               fprintf("Neurona <%s>: Sin datos \n", nombreActual);
-              structClasificado.(nombreActual).tiempos = [];
-              structClasificado.(nombreActual).class = 'NA';
+              structClasificado(k).class = 'NA';
             continue;
           end
         
@@ -27,21 +26,22 @@ function structClasificado = organizarFlexExt(neuronasOrdenadas)
 
         %disp(datosOrdenados)
         
-        % Contar cuántos datos caen en flexión (0-60) y en extensión (60-100)
-        cuentaFlex = sum(datosOrdenados >= 0 & datosOrdenados <= 60);
-        cuentaExt  = sum(datosOrdenados > 60 & datosOrdenados <= 100);
+        % Contar cuántos datos caen en flexión (0-porcentaje flex) y en extensión (porcentaje flex-100)
+        %disp(neuronasOrdenadas(k).flexporcent)
+        cuentaFlex = sum(datosOrdenados >= 0 & datosOrdenados <= neuronasOrdenadas(k).flexporcent);
+        cuentaExt  = sum(datosOrdenados > neuronasOrdenadas(k).flexporcent & datosOrdenados <= 100);
         
         %porcentajes 
         porcentajeFlex = (cuentaFlex / total) * 100;
         porcentajeExt  = (cuentaExt / total) * 100;
         
-        %
+        %{
         disp("Total de datos: " + total);
         disp("Flexión: " + porcentajeFlex + "%");
         disp("Extensión: " + porcentajeExt + "%");      
         %}
 
-        % Clasificacion flex  ext o NA en base a 60% o mas de disparos
+        % Clasificacion flex  ext o NA en base a 60 +-2% o mas de disparos
         if porcentajeFlex >= 58    
             structClasificado(k).nombre = nombreActual;
             structClasificado(k).tiempos = datosOrdenados;
