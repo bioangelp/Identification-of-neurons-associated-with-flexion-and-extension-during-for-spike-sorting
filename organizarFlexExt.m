@@ -1,16 +1,13 @@
 function structClasificado = organizarFlexExt(neuronasOrdenadas)
-
+    clc
     %nombre del structure final
     structClasificado = struct();
-    
+    fprintf("\t\tNeuronas clasificadas:\n")
     %bucle para recorrer todas las neuronas ya ordenadas
     for k = 1:length(neuronasOrdenadas)
         nombreActual = neuronasOrdenadas(k).nombre;
         datos = neuronasOrdenadas(k).disparos;
-        
-        %que neurona estamos checando
-        disp("Neurona: " + nombreActual);
-       
+               
         %contar la cantidad de disparos totales
         total = length(datos);
         
@@ -55,7 +52,7 @@ function structClasificado = organizarFlexExt(neuronasOrdenadas)
         else
 
             % Si no alcanza el 60% en ninguna fase, se asigna NA
-            fprintf("Se elimino la neurona <%s> ya que no alcanza el umbral del 60%%.\n", nombreActual);
+            % fprintf("Se elimino la neurona <%s> ya que no alcanza el umbral del 60%%.\n", nombreActual);
             %dis-p("Se elimino la neurona ya que no alcanza el umbral del 60%.");
 
             structClasificado(k).nombre = nombreActual;
@@ -63,5 +60,6 @@ function structClasificado = organizarFlexExt(neuronasOrdenadas)
             structClasificado(k).class = 'NA';
             
         end
+        disp("Neurona " + structClasificado(k).nombre + ": " + structClasificado(k).class)
     end
 end

@@ -30,7 +30,7 @@ function graficarNeuronas(structClasificado, flexion, extension, tiempo, umbral)
     end
 
     %% FIGURA Y CONFIGURACION
-    figure('Name', 'Análisis de Neuronas', 'Color', [0.90, 0.90, 0.90], 'Position', [100 100 1200 800]);
+    figure('Name', 'Análisis de Neuronas', 'MenuBar', 'none', "units", "normalized",'Position', [0, 0, 1, 1], 'Color', [0.90, 0.90, 0.90]);
     
     % Definición de colores (RGB)
     colorFlex = [0.4 0.2 0.6];   % Morado
@@ -74,7 +74,7 @@ function graficarNeuronas(structClasificado, flexion, extension, tiempo, umbral)
     ylim([0, numNeuronas+1]);
     xlim([0, 100]);
     ylabel('Neuronas');
-    xlabel('Unidades de tiempo normalizadas');
+    xlabel('Unidades Arbitrarias (UA) - Tiempo normalizado');
     title('Pool de Neuronas Clasificadas');
     grid on;
     box on;
@@ -89,7 +89,7 @@ function graficarNeuronas(structClasificado, flexion, extension, tiempo, umbral)
     
     xline(umbral, '--', 'Color', colorLine, 'LineWidth', 2);
     ylabel('Amplitud (mV)');
-    xlabel('Unidades de tiempo normalizadas');
+    xlabel('Unidades Arbitrarias (UA) - Tiempo normalizado');
     title('Canal de flexión');
     legend('Flexión', 'Location', 'northeast');
     xlim([0, 100]);
@@ -107,7 +107,7 @@ function graficarNeuronas(structClasificado, flexion, extension, tiempo, umbral)
     
     xline(umbral, '--', 'Color', colorLine, 'LineWidth', 2);
     ylabel('Amplitud (mV)');
-    xlabel('Unidades de tiempo normalizadas');
+    xlabel('Unidades Arbitrarias (UA) - Tiempo normalizado');
     title('Canal de extensión');
     legend('Extensión', 'Location', 'northwest');
     xlim([0, 100]);
@@ -117,7 +117,7 @@ function graficarNeuronas(structClasificado, flexion, extension, tiempo, umbral)
     hold off;
 
     %% HISTOGRAMA FLEXIÓN
-    subplot(5, 2, 9); 
+    subplot(5, 1, 4); 
     set(gca, 'Color', [1.0, 0.5, 0.0, 0.2]);
     hold on;
     
@@ -127,11 +127,11 @@ function graficarNeuronas(structClasificado, flexion, extension, tiempo, umbral)
     end 
     
     if ~isempty(todosLosTiemposFlex)
-        histogram(todosLosTiemposFlex, 10, 'FaceColor', colorFlex, 'EdgeColor', 'k', 'FaceAlpha', 0.7);
+        histogram(todosLosTiemposFlex, 20, 'FaceColor', colorFlex, 'EdgeColor', 'k', 'FaceAlpha', 0.7);
     end
     
     xline(umbral, '--', 'Color', colorLine, 'LineWidth', 2);
-    xlabel('Ciclo Normalizado (%)');
+    xlabel('Unidades Arbitrarias (UA) - Tiempo normalizado');
     ylabel('Frecuencia de Disparos');
     title('Histograma Flexión');
     xlim([0, 100]);
@@ -140,7 +140,7 @@ function graficarNeuronas(structClasificado, flexion, extension, tiempo, umbral)
     hold off;
 
     %% HISTOGRAMA EXTENSIÓN
-    subplot(5, 2, 10); 
+    subplot(5, 1, 5); 
     set(gca, 'Color', [0.55, 0.25, 0.75, 0.08]);
     hold on;
     
@@ -150,11 +150,11 @@ function graficarNeuronas(structClasificado, flexion, extension, tiempo, umbral)
     end 
     
     if ~isempty(todosLosTiemposExt)
-        histogram(todosLosTiemposExt, 10, 'FaceColor', colorExt, 'EdgeColor', 'k', 'FaceAlpha', 0.7);
+        histogram(todosLosTiemposExt, 20, 'FaceColor', colorExt, 'EdgeColor', 'k', 'FaceAlpha', 0.7);
     end
     
     xline(umbral, '--', 'Color', colorLine, 'LineWidth', 2);
-    xlabel('Ciclo Normalizado (%)');
+    xlabel('Unidades Arbitrarias (UA) - Tiempo normalizado');
     ylabel('Frecuencia de Disparos');
     title('Histograma Extension');
     xlim([0, 100]);

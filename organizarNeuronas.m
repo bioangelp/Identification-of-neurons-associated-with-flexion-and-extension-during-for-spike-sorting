@@ -1,7 +1,9 @@
-function [neuronasOrdenadas, neuronasSimples] = organizarNeuronas(estructuraNeuronas)
+    function [neuronasOrdenadas, neuronasSimples] = organizarNeuronas(estructuraNeuronas)
     datosAgrupados = struct(); 
+    %
     porcentajeDeFlexion = struct();
     iteracionParaMedia = struct();
+    %
     for k = 1:length(estructuraNeuronas)
         %disp(length(estructuraNeuronas))
         nombreActual = estructuraNeuronas(k).nombre;
@@ -25,8 +27,10 @@ function [neuronasOrdenadas, neuronasSimples] = organizarNeuronas(estructuraNeur
         % cONFIRMA QUE LA NEURONA YA EXISTE 
         if isfield(datosAgrupados, nombreDeLaNeuronaRecortadoSinLaIteracion)
             datosAgrupados.(nombreDeLaNeuronaRecortadoSinLaIteracion) = [datosAgrupados.(nombreDeLaNeuronaRecortadoSinLaIteracion); tiemposDeActualidad];
+            %
             porcentajeDeFlexion.(nombreDeLaNeuronaRecortadoSinLaIteracion) = porcentajeDeFlexion.(nombreDeLaNeuronaRecortadoSinLaIteracion) + estructuraNeuronas(k).flexion;
             iteracionParaMedia.(nombreDeLaNeuronaRecortadoSinLaIteracion) = iteracionParaMedia.(nombreDeLaNeuronaRecortadoSinLaIteracion) + 1;
+            %
         else
             datosAgrupados.(nombreDeLaNeuronaRecortadoSinLaIteracion) = tiemposDeActualidad;
             porcentajeDeFlexion.(nombreDeLaNeuronaRecortadoSinLaIteracion) = estructuraNeuronas(k).flexion;
@@ -45,6 +49,7 @@ function [neuronasOrdenadas, neuronasSimples] = organizarNeuronas(estructuraNeur
         nombreDeLaNeuronaEnEsteCiclo = listaDeNombresDeLaNeuronaRecortadoSinLaIteracion{k};
         tiemposTotales = datosAgrupados.(nombreDeLaNeuronaEnEsteCiclo);
         flexPorciento = porcentajeDeFlexion.(nombreDeLaNeuronaEnEsteCiclo) / iteracionParaMedia.(nombreDeLaNeuronaEnEsteCiclo);
+        
         %ordenadas
         neuronasOrdenadas(k).nombre = nombreDeLaNeuronaEnEsteCiclo;
         neuronasOrdenadas(k).disparos = sort(tiemposTotales);
@@ -62,8 +67,7 @@ function [neuronasOrdenadas, neuronasSimples] = organizarNeuronas(estructuraNeur
     if ~exist(resultadosAgrupadosSubfolder, 'dir')
         mkdir('resultados_agrupados');
     end
-    direccionCarpeta = fullfile(localizacionDePrograma, "resultados_agrupados");
-    cd(direccionCarpeta)
+    cd(resultadosAgrupadosSubfolder)
     save neuronasAgrupadas.mat neuronasSimples neuronasOrdenadas
     cd(localizacionDePrograma)
 

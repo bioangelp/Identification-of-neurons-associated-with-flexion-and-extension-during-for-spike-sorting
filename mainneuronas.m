@@ -1,3 +1,4 @@
+
 %{
 %
 % Analisis de neuronas
@@ -10,9 +11,13 @@
 %   
 %}
 
-clear;
+%clear;
 clc
 structDeNeuronas = descargarNeuronas();
+if structDeNeuronas(1).nombre== 0
+    disp('No se cargaron archivos.');
+    return
+end
 
 %% Funcion de angel:
 
@@ -45,5 +50,7 @@ structClasificado = organizarFlexExt(neuronasOrdenadas);
     abajo hacia arriba, primero flexoras y luego extensoras)
     -usar un proceso similar para los histogramas
 %}
-load("registroFE.mat")
-graficarNeuronas(structClasificado, flexion, extension, tiempo, porcentajeflexion)
+regFE = load("registroFE.mat");
+graficarNeuronas(structClasificado, regFE.flexion, regFE.extension, regFE.tiempo, regFE.porcentajeflexion)
+pause
+close all;

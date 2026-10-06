@@ -1,5 +1,7 @@
+clear
 sr = 50000;
 clc
+close all
 
 %% Obteniendo datos para el nombre
 disp(" Copie su segmento y posteriormente presione ENTER (no CTRL + V): ");
@@ -9,15 +11,28 @@ registro = str2num(registroRaw);
 %disp(registro)
 numeroRegistro = input(" Ingrese los ultimos 3 digitos nombre del archivo\n ", "s");
 clc
-numeroCanal = input(" Ingrese el número de canal para la lectura, (2) considerando que el canal 1 es correspondiente al tiempo\n ");
+numeroCanal = input(" Ingrese el número de canal para la lectura, considerando el #1 como el correspondiente al tiempo\n  ");
 clc
 numeroCanalReal = input(" Ingrese el número real del canal que corresponde al archivo\n ", "s");
+clc
+numeroFlexion = input(" Ingrese el número de canal de la flexion, considerando el #1 como el correspondiente al tiempo\n ");
+flexion = registro(:, numeroFlexion);
 clc
 numeroIteracion = input(" Ingrese el numero de iteracion que corresponde a este registro y este canal\n ", "s");
 clc
 nombreArchivo = sprintf("r%sc%si%s", numeroRegistro, numeroCanalReal, numeroIteracion);
 data = registro(:,numeroCanal);
 %disp(nombreArchivo)
+
+%% Obteniendo la posicion de donde termina la flexion
+
+% normalizar para porcentaje
+disp(" Seleccione donde termina la fase flexora")
+vectorTiempoNorm = (1/sr:1/sr:(length(flexion)/sr)) * 100 / (length(flexion)/sr);
+plot(vectorTiempoNorm, flexion)
+pause(1)
+[porcentajeFlexion, ~ ] = ginput(1);
+close Figure 1
 
 
 %% CREANDO CARPETAS PARA ORGANIZACION
@@ -57,7 +72,7 @@ if ~exist(subCarpetaNoNeedIndividual, 'dir')
     mkdir(subCarpetaNoNeedIndividual);
 end
 %%
-% guaardar pre waveclus en raw
+% guaardar pre - waveclus en raw
 
 save (nombreArchivo, 'data', 'sr');
 moverArchNombre = sprintf("%s.mat", nombreArchivo);
@@ -67,12 +82,11 @@ movefile(moverArchNombre, subCarpetaRaw)
 %declarar tiempo de registro para la normalizacion
 tiempoDeRegistro = length(data)/sr;
 
-fprintf("Presione enter y cargue el archivo con el nombre %s.mat en wave clus ", nombreArchivo)
+fprintf(" Presione enter y cargue el archivo con el nombre %s.mat en wave clus ", nombreArchivo)
 pause;
 cd(subCarpetaRaw)
 wave_clus
-clc
-disp("Presione enter una vez guardados los clusters, despues de las letras naranjas")
+disp(" Presione enter una vez guardados los clusters, despues de las letras naranjas")
 pause
 pause(1)
 
@@ -95,6 +109,7 @@ movefile("spc_log.txt", subCarpetaNoNeedIndividual);
 %%
 
 close wave_clus
+
 cd(localizacionDePrograma)
 % CONSTRUYENDO EL NOMBRE DEL ARCHIVO TIMES PARA CARGARLO Y EXTRAER DATOS
 archivoTimes = sprintf("times_%s.mat", nombreArchivo);
@@ -105,22 +120,23 @@ clustersNeuronas = registro.cluster_class(:,1);
 tiemposNeuronas = registro.cluster_class(:,2);
 
 numeroNeuronasEncontradas = transpose(unique(clustersNeuronas));
+%disp(numeroNeuronasEncontradas)
 
 % para cada neurona encontrada se crea un elemento de un struct con el
 % nombre del archivo + el numero de neurona y el tiempo que tomo la captura
 % para normalizarlo en otro programa
 
-clear miStruct
+clear neuroStruct
 for contador = numeroNeuronasEncontradas 
     if contador > 0
         tiempoFiltrado = tiemposNeuronas(clustersNeuronas == contador);
         nombreNeurona = sprintf("n%d%s", contador, nombreArchivo);
-        miStruct.(nombreNeurona) = tiempoFiltrado;
+        neuroStruct.(nombreNeurona) = tiempoFiltrado;
     end 
 end
 
 %proteccion por si no hayy nada
-if ~exist("miStruct", "var")
+if ~exist("neuroStruct", "var")
     disp("No hubieron neuronas en el registro");
     return
 end
@@ -136,14 +152,14 @@ end
 %moverse a la subcarpeta para descargar los datos
 cd(subCarpetaNeurona);
 
-nombresNeuronas = transpose(fieldnames(miStruct));
+nombresNeuronas = transpose(fieldnames(neuroStruct));
 
 % par cada neurona en el struct se guarda el tiempo en segundos de su disparo, se toma
 % el nombre de archivo como el nombre del elemento del struct 
 for neurona = nombresNeuronas
-    tiemposNeuronaSegundos = miStruct.(neurona{1})/1000;
+    tiemposNeuronaSegundos = neuroStruct.(neurona{1})/1000;
     nombreArchivoNeurona = neurona{1};
-    save(nombreArchivoNeurona, "tiemposNeuronaSegundos", "tiempoDeRegistro")
+    save(nombreArchivoNeurona, "tiemposNeuronaSegundos", "tiempoDeRegistro", "porcentajeFlexion")
 end
 
 %regresando a la ubicacion normal del programa

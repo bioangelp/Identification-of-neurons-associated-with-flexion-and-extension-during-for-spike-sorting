@@ -11,7 +11,7 @@ function neuronasStruct = descargarNeuronas()
     %disp(direccion)
     %disp(nombreArchivo)
     if isequal(nombreArchivo,0) || isequal(direccion, 0)
-        neuronasStruct = 0;
+        neuronasStruct(1).nombre = 0;
         return 
     end
     contador = 1;
@@ -23,10 +23,13 @@ function neuronasStruct = descargarNeuronas()
             end
        
         elseif isequal(length(archivo{1}), 15)
-            if ~(isequal(archivo{1}(1), 'n') && isequal(archivo{1}(4), 'r') && isequal(archivo{1}(8), 'c') && isequal(archivo{1}(10), 'i'))
+            if ~(isequal(archivo{1}(1), 'n') && isequal(archivo{1}(3), 'r') && isequal(archivo{1}(7), 'c') && isequal(archivo{1}(10), 'i'))
                 warning("El archivo %s no tiene el formato esperado, por lo tanto no se cargará para procesarla.", archivo{1});
                 continue
             end
+        else
+            warning("El archivo %s no tiene el formato esperado, por lo tanto no se cargará para procesarla.", archivo{1});
+            continue
         end
         nombreDeNeurona = archivo{1}(1:end-4);
         rutaArchivo = fullfile(direccion, archivo{1});
@@ -38,6 +41,9 @@ function neuronasStruct = descargarNeuronas()
         %disp(registroNeurona.tiemposNeuronaSegundos)
         neuronasStruct(contador).nombre = nombreDeNeurona;
         neuronasStruct(contador).disparos = tiempos;
+        flexPorcentaje = registroNeurona.porcentajeFlexion;
+        neuronasStruct(contador).flexion = flexPorcentaje;
+        
         contador = contador + 1;
     end
 
